@@ -8,41 +8,20 @@ public class Book {
 
 
     private String title;
-    private int priceCode;
+    private Price _price;
 
     public Book() {
     }
 
     public Book(String title, int priceCode) {
         this.title = title;
-        this.priceCode = priceCode;
+        setPriceCode(priceCode);
     }
-
 
     //1.提取统计数量的方法
     public double getCharge(int daysRented) {
-        double result = 0;
-        switch (getPriceCode()) {
-            case Book.REGULAR:
-                result += 2;
-                if (daysRented > 2) {
-                    result += (daysRented - 2) * 1.5;
-                }
-                break;
-            case Book.NEW_RELEASE:
-                result += daysRented * 3;
-                break;
-            case Book.CHILDRENS:
-                result += 1.5;
-                if (daysRented > 3) {
-                    result += (daysRented - 3) * 1.5;
-                }
-                break;
-        }
-        return result;
+        return _price.getCharge(daysRented);
     }
-
-
 
     //1.提取计算会员积分的方法
     public int getFrequentRenterPoints(int daysRented) {
@@ -61,10 +40,22 @@ public class Book {
     }
 
     public int getPriceCode() {
-        return priceCode;
+        return _price.getPriceCode();
     }
 
-    public void setPriceCode(int priceCode) {
-        this.priceCode = priceCode;
+    public void setPriceCode(int arg) {
+        switch (arg){
+            case REGULAR:
+                _price = new RegularPrice();
+                break;
+            case CHILDRENS:
+                _price = new ChildrensPrice();
+                break;
+            case NEW_RELEASE:
+                _price = new NewReleasePrice();
+                break;
+                default:
+                    throw new IllegalArgumentException("Incorrect Price code");
+        }
     }
 }
